@@ -5,85 +5,149 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Донаты (не обязательно!)</title>
     <style>
-        /* Настройки фона и шрифта */
+        /* ========================================= */
+        /* --- НАСТРОЙКИ СТИЛЯ (МЕНЯЙ ЦВЕТА ЗДЕСЬ) --- */
+        /* ========================================= */
+        :root {
+            /* Градиент фона (от верха к низу) */
+            --gradient-start-indigo: #1A237E; /* Вверху индиго-сапфировый */
+            --gradient-end-lilac-yogurt: #F4E8F8; /* Снизу сиренево-йогуртный */
+            
+            /* Основной цвет текста (на белом фоне) */
+            --text-dark: #2c3e50;
+            
+            /* Яркий цвет для заголовков и кнопок */
+            --primary-accent: #1A237E; /* Акцентный синий */
+            
+            /* Шрифт */
+            --base-font: 'Segoe UI Semibold', 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            --font-weight: 600;
+        }
+
+        /* ========================================= */
+        /* ----------- ОСНОВНОЙ CSS --------------- */
+        /* ========================================= */
+
         body {
             margin: 0;
             padding: 20px;
             min-height: 100vh;
-            /* Градиент: от индиго-сапфирового к сиренево-йогуртному */
-            background: linear-gradient(180deg, #1A237E 0%, #F4E8F8 100%);
+            background: linear-gradient(180deg, var(--gradient-start-indigo) 0%, var(--gradient-end-lilac-yogurt) 100%);
             background-attachment: fixed;
-            /* Жирный шрифт Segoe UI Semibold */
-            font-family: 'Segoe UI Semibold', 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-            font-weight: 600;
+            font-family: var(--base-font);
+            font-weight: var(--font-weight);
+            color: var(--text-dark);
             display: flex;
             justify-content: center;
-            align-items: center;
-            color: #2c3e50;
+            align-items: flex-start; /* Прижать к верху на телефоне */
         }
 
-        /* Белая плашка для читаемости текста */
+        @media (min-width: 600px) {
+            body { align-items: center; /* Центрировать на ПК */ }
+        }
+
         .container {
             background: rgba(255, 255, 255, 0.93);
-            padding: 40px;
+            padding: 20px; /* Меньше отступы по умолчанию (на телефоне) */
             border-radius: 20px;
             box-shadow: 0 15px 35px rgba(0,0,0,0.2);
             max-width: 650px;
             width: 100%;
             line-height: 1.6;
+            margin-top: 20px;
+            margin-bottom: 20px;
+        }
+
+        /* Увеличиваем отступы на больших экранах */
+        @media (min-width: 600px) {
+            .container { padding: 40px; }
         }
 
         h1 {
             text-align: center;
-            color: #1A237E;
+            color: var(--primary-accent);
             margin-top: 0;
         }
 
         /* Блоки с реквизитами */
         .payment-item {
             background: rgba(26, 35, 126, 0.05);
-            padding: 15px 20px;
+            padding: 20px;
             border-radius: 12px;
             margin-bottom: 15px;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            flex-wrap: wrap;
-            gap: 15px;
             border: 1px solid rgba(26, 35, 126, 0.1);
+            
+            /* На телефоне: вертикальное расположение */
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+        }
+
+        /* На ПК: горизонтальное расположение */
+        @media (min-width: 600px) {
+            .payment-item {
+                flex-direction: row;
+                justify-content: space-between;
+                align-items: center;
+            }
         }
 
         .payment-info {
-            word-break: break-all;
             flex: 1;
+            width: 100%;
         }
 
+        /* Исправление уродливого переноса заголовков (Перевод на...) */
+        .payment-info strong {
+            display: block;
+            word-break: normal;
+            hyphens: none;
+            overflow-wrap: normal;
+            color: var(--text-dark);
+        }
+
+        /* Реквизиты и криптоадреса */
         .payment-info span {
             font-size: 1.1em;
-            color: #1A237E;
+            color: var(--primary-accent);
+            word-break: break-all; /* Всё еще нужно для криптоадресов */
+        }
+
+        /* Для номера телефона: не переносить на новую строку */
+        .payment-info span.nowrap {
+            white-space: nowrap;
         }
 
         /* Кнопки копирования */
         .copy-btn {
-            background: #1A237E;
+            background: var(--primary-accent);
             color: white;
             border: none;
-            padding: 10px 18px;
+            padding: 12px 20px;
             border-radius: 8px;
             cursor: pointer;
-            font-family: 'Segoe UI Semibold', 'Segoe UI', sans-serif;
-            font-weight: 600;
-            font-size: 0.9em;
+            font-family: var(--base-font);
+            font-weight: var(--font-weight);
+            font-size: 1em;
             transition: all 0.3s ease;
             white-space: nowrap;
+            
+            /* На телефоне: во всю ширину */
+            width: 100%;
+            text-align: center;
+        }
+
+        @media (min-width: 600px) {
+            .copy-btn {
+                width: auto; /* На ПК: нормальный размер */
+            }
         }
 
         .copy-btn:hover {
-            background: #283593;
+            opacity: 0.9;
             transform: translateY(-2px);
         }
 
-        /* Цвет кнопки при успешном копировании */
         .copy-btn.copied {
             background: #4caf50;
         }
@@ -92,12 +156,11 @@
             margin-top: 35px;
             border-bottom: 2px solid #E1BEE7;
             padding-bottom: 10px;
-            color: #1A237E;
+            color: var(--primary-accent);
         }
 
         a.link-btn {
             text-decoration: none;
-            text-align: center;
             display: inline-block;
         }
 
@@ -105,9 +168,10 @@
             font-size: 0.85em;
             color: #555;
             background: #fdfdfd;
-            padding: 10px;
+            padding: 15px;
             border-left: 4px solid #CE93D8;
             border-radius: 4px;
+            margin-bottom: 20px;
         }
     </style>
 </head>
@@ -115,10 +179,10 @@
 
 <div class="container">
     <h1>Донаты (не обязательно!)</h1>
-    <p>Если вы хотите отблагодарить меня — мне достаточно от вас просто "спасибо", но если у вас есть желание выразить это в деньгах — мне будет весьма приятно.</p>
-    <p>Любая минимально возможная сумма от вас — уже <strong>большая 💐</strong> благодарность!</p>
+    <p>Если вы хотите отблагодарить меня — мне достаточно от вас простого "спасибо", но если у вас есть желание выразить это в деньгах — мне будет весьма приятно.</p>
+    <p>Любая минимально возможная сумма от вас — уже <strong>большая 💐** благодарность!</p>
     
-    <p class="disclaimer">В комментарии перевода просьба написать слово "донат", "спасибо" или "на развитие", так как это не платёж за услугу, а добровольный взнос (я самозанятый, так что отчитываюсь в налоговой).</p>
+    <div class="disclaimer">В комментарии перевода просьба написать слово "донат", "спасибо" или "на развитие", так как это не платёж за услугу, а добровольный взнос (я самозанятый, так что отчитываюсь в налоговой).</div>
 
     <div class="payment-item">
         <div class="payment-info"><strong>Перевод на Сбер/Т-банк:</strong></div>
@@ -126,7 +190,7 @@
     </div>
 
     <div class="payment-item">
-        <div class="payment-info"><strong>СБП (Николай П.):</strong><br><span>+79197489544</span></div>
+        <div class="payment-info"><strong>СБП (Николай П.):</strong><br><span class="nowrap">+79197489544</span></div>
         <button class="copy-btn" onclick="copyText('+79197489544', this)">Скопировать</button>
     </div>
 
@@ -185,6 +249,8 @@
             }, 2000);
         }).catch(err => {
             console.error('Ошибка при копировании: ', err);
+            // Если navigator.clipboard не поддерживается (например, старый браузер),
+            // можно реализовать резервный метод, но для современных телефонов это не нужно.
             alert('Не удалось скопировать текст. Пожалуйста, выделите его вручную.');
         });
     }
